@@ -1,0 +1,3 @@
+sudo dnf config-manager --add-repo https://rpm.releases.hashicorp.com/AmazonLinux/hashicorp.repo && \
+sudo dnf -y install terraform && \
+terraform -version
