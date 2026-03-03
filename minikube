@@ -1,0 +1,88 @@
+# ==============================
+# 1️⃣ Install Required Package
+# ==============================
+sudo yum install -y conntrack   # (Amazon Linux / RHEL)
+
+# If Ubuntu use:
+# sudo apt update
+# sudo apt install -y conntrack
+
+
+# ==============================
+# 2️⃣ Install Minikube
+# ==============================
+curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
+chmod +x minikube-linux-amd64
+sudo mv minikube-linux-amd64 /usr/local/bin/minikube
+
+
+# ==============================
+# 3️⃣ Verify Installation
+# ==============================
+minikube version
+
+
+# ==============================
+# 4️⃣ Start Minikube Cluster
+# ==============================
+minikube start --driver=docker --force
+
+
+# ==============================
+# 5️⃣ Verify Kubernetes Cluster
+# ==============================
+kubectl get nodes
+
+
+# ==============================
+# 6️⃣ Create Deployment File
+# ==============================
+cat <<EOF > deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: boges-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: boges-app
+  template:
+    metadata:
+      labels:
+        app: boges-app
+    spec:
+      containers:
+      - name: boges-container
+        image: bogeswar/image-2:v1
+EOF
+
+
+# ==============================
+# 7️⃣ Deploy to Kubernetes
+# ==============================
+kubectl apply -f deployment.yaml
+
+
+# ==============================
+# 8️⃣ Check Pods
+# ==============================
+kubectl get pods
+
+
+# ==============================
+# 9️⃣ Expose Service
+# ==============================
+kubectl expose deployment boges-app --type=NodePort --port=80
+
+
+# ==============================
+# 🔟 Get Service Details
+# ==============================
+kubectl get svc
+
+
+# ==============================
+# 1️⃣1️⃣ Open Service URL
+# ==============================
+minikube service boges-app
